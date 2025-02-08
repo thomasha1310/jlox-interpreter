@@ -41,6 +41,8 @@ public class Lox {
             if (line == null)
                 break;
             run(line);
+
+            // Resets error flag so user can continue running code.
             hadError = false;
         }
     }
