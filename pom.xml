@@ -25,7 +25,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>Lox</mainClass>
+                            <mainClass>com.thomasha.Lox</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
