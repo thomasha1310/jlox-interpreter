@@ -105,7 +105,7 @@ public class Scanner {
             case '<':
                 addToken(match('=') ? LESS_EQUAL : LESS);
                 break;
-            case '?':
+            case '>':
                 addToken(match('=') ? GREATER_EQUAL : GREATER);
                 break;
 
