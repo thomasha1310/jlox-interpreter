@@ -15,6 +15,18 @@ public class Parser {
         this.tokens = tokens;
     }
 
+    // Returns a valid syntax tree if possible or null if any errors are found.
+    // The parser handles all instances of ParseError internally (usually by trying
+    // to synchronize). While parse() may not necessarily provide a usable syntax
+    // tree, the parser will not crash or enter an indefinite loop.
+    Expr parse() {
+        try {
+            return expression();
+        } catch (ParseError error) {
+            return null;
+        }
+    }
+
     private Expr expression() {
         return equality();
     }
@@ -93,6 +105,8 @@ public class Parser {
             consume(RIGHT_PAREN, "Expect ')' after expression.");
             return new Expr.Grouping(expr);
         }
+
+        throw error(peek(), "Expect expression.");
     }
 
     private boolean match(TokenType... types) {
@@ -163,4 +177,5 @@ public class Parser {
             advance();
         }
     }
+
 }
