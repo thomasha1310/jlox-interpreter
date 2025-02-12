@@ -150,8 +150,8 @@ public class Scanner {
             advance();
 
         String text = source.substring(start, current);
-        // If the text does not match a keyword, it is an identifier.
         TokenType type = keywords.get(text);
+        // If the text does not match a keyword, it is an identifier.
         if (type == null)
             type = IDENTIFIER;
         addToken(type);
