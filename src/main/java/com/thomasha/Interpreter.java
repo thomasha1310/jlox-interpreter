@@ -5,7 +5,7 @@ public class Interpreter implements Expr.Visitor<Object> {
         try {
             Object value = evaluate(expression);
             System.out.println(stringify(value));
-        } catch (RuntimeException error) {
+        } catch (RuntimeError error) {
             Lox.runtimeError(error);
         }
     }
