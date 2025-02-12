@@ -1,5 +1,6 @@
 package com.thomasha;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.thomasha.TokenType.*;
@@ -15,20 +16,42 @@ public class Parser {
         this.tokens = tokens;
     }
 
-    // Returns a valid syntax tree if possible or null if any errors are found.
-    // The parser handles all instances of ParseError internally (usually by trying
-    // to synchronize). While parse() may not necessarily provide a usable syntax
-    // tree, the parser will not crash or enter an indefinite loop.
-    Expr parse() {
-        try {
-            return expression();
-        } catch (ParseError error) {
-            return null;
+    // #TODO add documentation
+    List<Stmt> parse() {
+        List<Stmt> statements = new ArrayList<>();
+        while (!isAtEnd()) {
+            statements.add(statement());
         }
+
+        return statements;
     }
 
     private Expr expression() {
         return equality();
+    }
+
+    private Stmt statement() {
+        if (match(PRINT))
+            return printStatement();
+
+        return expressionStatement();
+    }
+
+    // Reads the value to be printed and returns a print statement containing the
+    // value. The keyword 'print' is already consumed by the match(PRINT) call in
+    // the statement() method.
+    private Stmt printStatement() {
+        Expr value = expression();
+        consume(SEMICOLON, "Expect ';' after value.");
+        return new Stmt.Print(value);
+    }
+
+    // Reads the expression and returns an expression statement containing the
+    // expression.
+    private Stmt expressionStatement() {
+        Expr expr = expression();
+        consume(SEMICOLON, "Expect ';' after expression.");
+        return new Stmt.Expression(expr);
     }
 
     private Expr equality() {
@@ -109,6 +132,8 @@ public class Parser {
         throw error(peek(), "Expect expression.");
     }
 
+    // Checks if the current token matches the specified type(s). If so, advances
+    // and returns true; otherwise, returns false.
     private boolean match(TokenType... types) {
         for (TokenType type : types) {
             if (check(type)) {
@@ -120,18 +145,23 @@ public class Parser {
         return false;
     }
 
+    // Used when the current token is expected to be a specified type. Returns the
+    // current token and advances if it matches the specified type, otherwise throws
+    // an error.
     private Token consume(TokenType type, String message) {
         if (check(type))
             return advance();
         throw error(peek(), message);
     }
 
+    // Returns true if and only if the current token matches the specified type.
     private boolean check(TokenType type) {
         if (isAtEnd())
             return false;
         return peek().type == type;
     }
 
+    // Increments the 'current' index and returns the previous token.
     private Token advance() {
         if (!isAtEnd())
             current++;
@@ -142,10 +172,12 @@ public class Parser {
         return peek().type == EOF;
     }
 
+    // Returns, but does not alter or advance past, the current token.
     private Token peek() {
         return tokens.get(current);
     }
 
+    // Returns the previous token.
     private Token previous() {
         return tokens.get(current - 1);
     }
