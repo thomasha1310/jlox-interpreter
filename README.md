@@ -1,6 +1,6 @@
 # jLox Interpreter
 
-This is a work-in-progress interpreter built in Java for the Lox language following Robert Nystrom's "Crafting Interpreters" guide.
+This is a work-in-progress interpreter built in Java for the Lox language following Bob Nystrom's ["Crafting Interpreters" guide](https://craftinginterpreters.com/).
 
 ## Features
 
@@ -24,4 +24,4 @@ Additional features (work-in-progress):
 
 ## License
 
-This project (like Robert Nystrom's original code) is licensed under the [MIT License](LICENSE).
+This project (like Bob Nystrom's [original code](https://github.com/munificent/craftinginterpreters)) is licensed under the [MIT License](LICENSE).
