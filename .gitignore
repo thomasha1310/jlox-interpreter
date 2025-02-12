@@ -1,4 +1,4 @@
-# JAVA GITIGNORE
+##### JAVA GITIGNORE #####
 
 # Compiled class file
 *.class
@@ -25,7 +25,7 @@
 hs_err_pid*
 replay_pid*
 
-# MAVEN GITIGNORE
+##### MAVEN GITIGNORE #####
 
 target/
 pom.xml.tag
@@ -44,4 +44,22 @@ buildNumber.properties
 .project
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
+
+##### LOX GITIGNORE #####
+
 *.lox
+
+##### VISUAL STUDIO CODE GITIGNORE #####
+
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# Local History for Visual Studio Code
+.history/
+
+# Built Visual Studio Code Extensions
+*.vsix
