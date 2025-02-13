@@ -1,4 +1,4 @@
-package com.thomasha;
+package com.thomasha.jlox;
 
 public class Token {
     final TokenType type;

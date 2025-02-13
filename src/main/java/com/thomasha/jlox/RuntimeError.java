@@ -1,4 +1,4 @@
-package com.thomasha;
+package com.thomasha.jlox;
 
 public class RuntimeError extends RuntimeException {
     final Token token;

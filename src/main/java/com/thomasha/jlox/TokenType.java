@@ -1,4 +1,4 @@
-package com.thomasha;
+package com.thomasha.jlox;
 
 enum TokenType {
     // Single-character tokens.

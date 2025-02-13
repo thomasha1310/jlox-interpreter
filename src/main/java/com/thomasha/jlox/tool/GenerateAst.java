@@ -1,4 +1,4 @@
-package com.thomasha.tool;
+package com.thomasha.jlox.tool;
 
 import java.io.IOException;
 import java.io.PrintWriter;

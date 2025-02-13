@@ -1,9 +1,9 @@
-package com.thomasha;
+package com.thomasha.jlox;
+
+import static com.thomasha.jlox.TokenType.*;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.thomasha.TokenType.*;
 
 public class Parser {
     private static class ParseError extends RuntimeException {

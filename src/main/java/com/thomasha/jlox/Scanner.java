@@ -1,11 +1,11 @@
-package com.thomasha;
+package com.thomasha.jlox;
+
+import static com.thomasha.jlox.TokenType.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static com.thomasha.TokenType.*;
 
 public class Scanner {
     private static final Map<String, TokenType> keywords;
