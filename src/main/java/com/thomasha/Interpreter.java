@@ -15,6 +15,14 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         }
     }
 
+    // <<============================ EXPRESSIONS =============================>> //
+
+    // Evaluates the expression by having it accept this Interpreter object. The
+    // expression then calls the corresponding visit method in this Interpreter.
+    private Object evaluate(Expr expr) {
+        return expr.accept(this);
+    }
+
     @Override
     public Object visitLiteralExpr(Expr.Literal expr) {
         return expr.value;
@@ -46,92 +54,6 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     @Override
     public Object visitVariableExpr(Expr.Variable expr) {
         return environment.get(expr.name);
-    }
-
-    private void checkNumberOperand(Token operator, Object operand) {
-        if (operand instanceof Double)
-            return;
-        throw new RuntimeError(operator, "Operand must be a number.");
-    }
-
-    private void checkNumberOperands(Token operator, Object left, Object right) {
-        if (left instanceof Double && right instanceof Double)
-            return;
-        throw new RuntimeError(operator, "Operands must be numbers.");
-    }
-
-    // Returns false if and only if the object is null (nil) or is a boolean value
-    // that evaluates to false. Otherwise, returns true (including if the object is
-    // an integer equal to 0).
-    private boolean isTruthy(Object object) {
-        if (object == null)
-            return false;
-        if (object instanceof Boolean)
-            return (boolean) object;
-        return true;
-    }
-
-    // Returns false if one object is null and the other is not and returns true if
-    // both objects are null. Otherwise, defers to the Java Object's equals() method
-    // for String, Double, and Boolean comparisons.
-    private boolean isEqual(Object a, Object b) {
-        if (a == null && b == null)
-            return true;
-        if (a == null)
-            return false;
-
-        return a.equals(b);
-    }
-
-    private String stringify(Object object) {
-        if (object == null)
-            return "nil";
-
-        if (object instanceof Double) {
-            String text = object.toString();
-            // Handles numbers with integer values.
-            if (text.endsWith(".0"))
-                text = text.substring(0, text.length() - 2);
-            return text;
-        }
-
-        return object.toString();
-    }
-
-    // Evaluates the expression by having it accept the Visitor. The expression then
-    // calls the corresponding visit method in the visiting Interpreter.
-    private Object evaluate(Expr expr) {
-        return expr.accept(this);
-    }
-
-    private void execute(Stmt stmt) {
-        stmt.accept(this);
-    }
-
-    @Override
-    public Void visitExpressionStmt(Stmt.Expression stmt) {
-        evaluate(stmt.expression);
-        return null;
-    }
-
-    @Override
-    public Void visitPrintStmt(Stmt.Print stmt) {
-        Object value = evaluate(stmt.expression);
-        System.out.println(stringify(value));
-        return null;
-    }
-
-    // Evaluates the initializer and sets the variable to the evaluated value. If no
-    // initializer is provided, sets the variable to null (nil).
-    @Override
-    public Void visitVarStmt(Stmt.Var stmt) {
-        Object value = null;
-        if (stmt.initializer != null) {
-            value = evaluate(stmt.initializer);
-        }
-
-        environment.define(stmt.name.lexeme, value);
-        return null;
     }
 
     @Override
@@ -173,10 +95,97 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
             case STAR:
                 checkNumberOperands(expr.operator, left, right);
                 return (double) left * (double) right;
-
         }
 
         // Unreachable.
         return null;
+    }
+
+    // <<============================= STATEMENTS =============================>> //
+
+    // Executes the statement by having it accept this Interpreter object. The
+    // statement then calls the corresponding visit method in this Interpreter.
+    private void execute(Stmt stmt) {
+        stmt.accept(this);
+    }
+
+    @Override
+    public Void visitExpressionStmt(Stmt.Expression stmt) {
+        evaluate(stmt.expression);
+        return null;
+    }
+
+    @Override
+    public Void visitPrintStmt(Stmt.Print stmt) {
+        Object value = evaluate(stmt.expression);
+        System.out.println(stringify(value));
+        return null;
+    }
+
+    // Evaluates the initializer and sets the variable to the evaluated value. If no
+    // initializer is provided, sets the variable to null (nil).
+    @Override
+    public Void visitVarStmt(Stmt.Var stmt) {
+        Object value = null;
+        if (stmt.initializer != null) {
+            value = evaluate(stmt.initializer);
+        }
+
+        environment.define(stmt.name.lexeme, value);
+        return null;
+    }
+
+    // <<========================== HELPER FUNCTIONS ==========================>> //
+
+    private void checkNumberOperand(Token operator, Object operand) {
+        if (operand instanceof Double)
+            return;
+        throw new RuntimeError(operator, "Operand must be a number.");
+    }
+
+    private void checkNumberOperands(Token operator, Object left, Object right) {
+        if (left instanceof Double && right instanceof Double)
+            return;
+        throw new RuntimeError(operator, "Operands must be numbers.");
+    }
+
+    // Returns false if and only if the object is null (nil) or is a boolean value
+    // that evaluates to false. Otherwise, returns true (including if the object is
+    // an integer equal to 0).
+    private boolean isTruthy(Object object) {
+        if (object == null)
+            return false;
+        if (object instanceof Boolean)
+            return (boolean) object;
+        return true;
+    }
+
+    // Returns false if one object is null and the other is not and returns true if
+    // both objects are null. Otherwise, defers to the Java Object's equals() method
+    // for String, Double, and Boolean comparisons.
+    private boolean isEqual(Object a, Object b) {
+        if (a == null && b == null)
+            return true;
+        if (a == null)
+            return false;
+
+        return a.equals(b);
+    }
+
+    // Converts a Java Object representation of a Lox value into a string following
+    // Lox conventions.
+    private String stringify(Object object) {
+        if (object == null)
+            return "nil";
+
+        if (object instanceof Double) {
+            String text = object.toString();
+            // Handles numbers with integer values.
+            if (text.endsWith(".0"))
+                text = text.substring(0, text.length() - 2);
+            return text;
+        }
+
+        return object.toString();
     }
 }
