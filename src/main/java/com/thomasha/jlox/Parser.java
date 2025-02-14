@@ -182,6 +182,38 @@ public class Parser {
         throw error(peek(), "Expect expression.");
     }
 
+    private ParseError error(Token token, String message) {
+        Lox.error(token, message);
+        return new ParseError();
+    }
+
+    private void synchronize() {
+        advance();
+
+        while (!isAtEnd()) {
+            if (previous().type == SEMICOLON)
+                return;
+
+            switch (peek().type) {
+                case CLASS:
+                case FUN:
+                case VAR:
+                case FOR:
+                case IF:
+                case WHILE:
+                case PRINT:
+                case RETURN:
+                    return;
+                default:
+                    break;
+            }
+
+            advance();
+        }
+    }
+
+    // <<========================== HELPER FUNCTIONS ==========================>> //
+
     // Checks if the current token matches the specified type(s). If so, advances
     // and returns true; otherwise, returns false.
     private boolean match(TokenType... types) {
@@ -230,36 +262,6 @@ public class Parser {
     // Returns the previous token.
     private Token previous() {
         return tokens.get(current - 1);
-    }
-
-    private ParseError error(Token token, String message) {
-        Lox.error(token, message);
-        return new ParseError();
-    }
-
-    private void synchronize() {
-        advance();
-
-        while (!isAtEnd()) {
-            if (previous().type == SEMICOLON)
-                return;
-
-            switch (peek().type) {
-                case CLASS:
-                case FUN:
-                case VAR:
-                case FOR:
-                case IF:
-                case WHILE:
-                case PRINT:
-                case RETURN:
-                    return;
-                default:
-                    break;
-            }
-
-            advance();
-        }
     }
 
 }

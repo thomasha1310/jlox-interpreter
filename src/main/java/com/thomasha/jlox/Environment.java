@@ -22,6 +22,9 @@ public class Environment {
         values.put(name, value);
     }
 
+    // Sets the value of the specified variable if and only if the variable has
+    // already been defined. If the variable has not been defined, throws a
+    // RuntimeError, similar to get().
     void assign(Token name, Object value) {
         if (values.containsKey(name.lexeme)) {
             values.put(name.lexeme, value);
