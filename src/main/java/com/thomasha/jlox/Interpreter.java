@@ -118,9 +118,9 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     // <<============================= STATEMENTS =============================>> //
 
     /**
-     * Executes a Stmt object by having it accept this Interpreter object. The
-     * statement then calls the corresponding visit method in this Interpreter
-     * object.
+     * Executes a {@code Stmt} object by having it accept this {@code Interpreter}
+     * object. The statement then calls the corresponding {@code visit} method in
+     * this {@code Interpreter} object.
      * 
      * @param stmt the statement to be executed
      * @see Stmt
