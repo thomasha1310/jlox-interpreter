@@ -30,26 +30,45 @@ public class Scanner {
         keywords.put("while", WHILE);
     }
 
+    /**
+     * The source code as a {@code String}.
+     */
     private final String source;
+
+    /**
+     * A list containing scanned tokens after {@link #scanTokens()} is run.
+     */
     private final List<Token> tokens = new ArrayList<>();
 
-    // First character in the lexeme being scanned; index is absolute with respect
-    // to source. That is, if start is 5, then the first character of the lexeme
-    // is source.charAt(5).
+    /**
+     * The index of {@code source} corresponding to the first character of the
+     * current lexeme such that {@code source.charAt(start)} is the first character
+     * of the current lexeme.
+     */
     private int start = 0;
 
-    // Character in the lexeme that is currently being considered; index is absolute
-    // with respect to source.
+    /**
+     * The index of {@code source} corresponding to the character that is currently
+     * being considered such that {@code source.charAt(start)} is the character in
+     * the lexeme currently being evaluated.
+     */
     private int current = 0;
 
-    // Traces which source line current is on to create tokens that know their
-    // location (for error reporting).
+    /**
+     * The line of {@code source} that {@code current} is on. Used to create tokens
+     * that know their location for error reporting.
+     */
     private int line = 1;
 
     Scanner(String source) {
         this.source = source;
     }
 
+    /**
+     * Scans {@link #source} to create a {@code List} of parseable tokens.
+     * 
+     * @return a list of parseable tokens
+     */
     List<Token> scanTokens() {
         while (!isAtEnd()) {
             // We are at the beginning of the next lexeme.
@@ -62,6 +81,9 @@ public class Scanner {
         return tokens;
     }
 
+    /**
+     * Scans a single token and adds it to {@link #tokens}.
+     */
     private void scanToken() {
         char c = advance();
         switch (c) {
@@ -145,18 +167,34 @@ public class Scanner {
         }
     }
 
+    /**
+     * Handles scanning an alphanumeric token (which can be either a keyword or an
+     * identifier). Advances until the next character of {@link #source} is no
+     * longer alphanumeric, then extracts the value of the token and determines the
+     * type of the token as either a keyword or an identifier. Adds the token to
+     * {@link #tokens}.
+     */
     private void identifier() {
         while (isAlphaNumeric(peek()))
             advance();
 
         String text = source.substring(start, current);
         TokenType type = keywords.get(text);
-        // If the text does not match a keyword, it is an identifier.
+
         if (type == null)
+            // If the text does not match a keyword, it is an identifier.
             type = IDENTIFIER;
+
         addToken(type);
     }
 
+    /**
+     * Handles scanning a number by advancing until the next character of
+     * {@link #source} is no longer a digit, then extracting the literal value using
+     * the {@code substring} and {@code parseDouble} methods.
+     * 
+     * @see #isDigit(char)
+     */
     private void number() {
         // Advance until a non-digit (0-9) character is found.
         while (isDigit(peek()))
@@ -173,6 +211,16 @@ public class Scanner {
         addToken(NUMBER, Double.parseDouble(source.substring(start, current)));
     }
 
+    /**
+     * Handles scanning a string once a quotation mark {@code "} has been found by
+     * advancing until a closing quotation mark is found, then extracting the
+     * literal value using the {@code substring} method. Calls {@code Lox.error} if
+     * the string is unterminated, but does not throw a {@link RuntimeError} as an
+     * unterminated string is a compile-time error.
+     * 
+     * @see Lox#run(String)
+     * @see com.thomasha.jlox.Lox#error(Token, String)
+     */
     private void string() {
         while (peek() != '"' && !isAtEnd()) {
             if (peek() == '\n')
@@ -192,6 +240,16 @@ public class Scanner {
         addToken(STRING, value);
     }
 
+    /**
+     * Checks if the {@link #current} character matches the {@code expected}
+     * character. Increments {@code current} by 1 and returns {@code true} if and
+     * only if the characters match. Otherwise, resturns {@code false} (including if
+     * {@link #isAtEnd()} is true) without incrementing {@code current}.
+     * 
+     * @param expected the character to match
+     * @return {@code false} if {@link #isAtEnd()} or the characters do not match,
+     *         and {@code true} if the characters match
+     */
     private boolean match(char expected) {
         if (isAtEnd())
             return false;
@@ -201,14 +259,30 @@ public class Scanner {
         return true;
     }
 
-    // Returns the value of source at current index without advancing.
+    /**
+     * Returns the value of {@link #source} at index {@code current}, but does not
+     * change the value of {@link #current}. If {@code current} exceeds the length
+     * of {@code source}, returns the null character {@code \0}.
+     * 
+     * @return the value of {@link #source} at index {@code current} or the null
+     *         character {@code \0} if {@code current} exceeds {@code source}
+     *         length
+     */
     private char peek() {
         if (isAtEnd())
             return '\0';
         return source.charAt(current);
     }
 
-    // Returns the value of source at one past the current index without advancing.
+    /**
+     * Returns the value of {@link #source} at index {@code current + 1}, but does
+     * not change the value of {@link #current}. If {@code current + 1} exceeds the
+     * length of {@code source}, returns the null character {@code \0}.
+     * 
+     * @return the value of {@link #source} at index {@code current + 1} or the null
+     *         character {@code \0} if {@code current + 1} exceeds {@code source}
+     *         length
+     */
     private char peekNext() {
         if (current + 1 >= source.length())
             return '\0';
@@ -231,15 +305,38 @@ public class Scanner {
         return current >= source.length();
     }
 
-    // Reads and returns the current character, then moves current forward.
+    /**
+     * Reads and returns the {@link #current} character, then increments
+     * {@code current} by 1.
+     * 
+     * @return the character that was advanced past
+     */
     private char advance() {
         return source.charAt(current++);
     }
 
+    /**
+     * Adds a {@link Token} to {@link #tokens} with {@link TokenType} of
+     * {@code type} and a {@code null} {@code literal} value. Equivalent to calling
+     * {@code addToken(type, null)}.
+     * 
+     * @param type type of token to add, usually not {@code IDENTIFIER},
+     *             {@code STRING}, or {@code NUMBER}
+     */
     private void addToken(TokenType type) {
         addToken(type, null);
     }
 
+    /**
+     * Adds a {@link Token} to {@link #tokens} with {@link TokenType} of
+     * {@code type}, a {@code lexeme} of {@code source.substring(start, current)}, a
+     * {@code literal} value of {@code literal}, and a {@code line} number of
+     * {@code line}.
+     * 
+     * @param type    type of token to add
+     * @param literal value of an {@code IDENTIFIER}, {@code STRING}, or
+     *                {@code NUMBER} type token, or {@code null} otherwise
+     */
     private void addToken(TokenType type, Object literal) {
         String text = source.substring(start, current);
         tokens.add(new Token(type, text, literal, line));
