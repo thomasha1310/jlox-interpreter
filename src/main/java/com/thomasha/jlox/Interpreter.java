@@ -17,8 +17,15 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     // <<============================ EXPRESSIONS =============================>> //
 
-    // Evaluates the expression by having it accept this Interpreter object. The
-    // expression then calls the corresponding visit method in this Interpreter.
+    /**
+     * Evaluates an Expr object by having it accept this Interpreter object. The
+     * expression then calls the corresponding visit method in this Interpreter
+     * object.
+     * 
+     * @param expr the expression to be evaluated
+     * @return the resulting evaluation as a Java Object
+     * @see Expr
+     */
     private Object evaluate(Expr expr) {
         return expr.accept(this);
     }
@@ -110,8 +117,14 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     // <<============================= STATEMENTS =============================>> //
 
-    // Executes the statement by having it accept this Interpreter object. The
-    // statement then calls the corresponding visit method in this Interpreter.
+    /**
+     * Executes a Stmt object by having it accept this Interpreter object. The
+     * statement then calls the corresponding visit method in this Interpreter
+     * object.
+     * 
+     * @param stmt the statement to be executed
+     * @see Stmt
+     */
     private void execute(Stmt stmt) {
         stmt.accept(this);
     }
@@ -148,8 +161,14 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         return null;
     }
 
-    // Evaluates the initializer and sets the variable to the evaluated value. If no
-    // initializer is provided, sets the variable to null (nil).
+    /**
+     * Evaluates the initializer (instance of {@code Expr}) of the
+     * {@code Stmt.Var} object and sets the variable to the evaluated value. If
+     * no initializer is provided, sets the variable to {@code nil}.
+     * 
+     * @param stmt the variable statement to be evaluated
+     * @return a null instance of <code>java.lang.Void</code>
+     */
     @Override
     public Void visitVarStmt(Stmt.Var stmt) {
         Object value = null;
@@ -175,9 +194,14 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         throw new RuntimeError(operator, "Operands must be numbers.");
     }
 
-    // Returns false if and only if the object is null (nil) or is a boolean value
-    // that evaluates to false. Otherwise, returns true (including if the object is
-    // an integer equal to 0).
+    /**
+     * Returns false if and only if the object is {@code nil} or is an instance of
+     * {@code Boolean} that evaluates to {@code false}. Otherwise, returns true,
+     * including if the object is an integer equal to 0.
+     * 
+     * @param object the object to be evaluated
+     * @return a boolean representing the truthiness of the specified object
+     */
     private boolean isTruthy(Object object) {
         if (object == null)
             return false;
@@ -186,9 +210,16 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         return true;
     }
 
-    // Returns false if one object is null and the other is not and returns true if
-    // both objects are null. Otherwise, defers to the Java Object's equals() method
-    // for String, Double, and Boolean comparisons.
+    /**
+     * Returns false if one object is {@code nil} and the other is not. Returns true
+     * if both objects are {@code nil}. Otherwise, defers to the
+     * {@code java.lang.Object.equals} method.
+     * 
+     * @param a the first object to be compared
+     * @param b the second object to be compared
+     * @return a boolean representing whether the objects are equal
+     * @see java.lang.Object#equals(Object)
+     */
     private boolean isEqual(Object a, Object b) {
         if (a == null && b == null)
             return true;
@@ -198,8 +229,13 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         return a.equals(b);
     }
 
-    // Converts a Java Object representation of a Lox value into a string following
-    // Lox conventions.
+    /**
+     * Converts a {@code java.lang.Object} representation of a Lox value into a
+     * string following Lox conventions.
+     * 
+     * @param object a representation of a Lox value
+     * @return a string conversion of the original object
+     */
     private String stringify(Object object) {
         if (object == null)
             return "nil";
