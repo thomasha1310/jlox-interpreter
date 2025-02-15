@@ -161,6 +161,17 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         return null;
     }
 
+    @Override
+    public Void visitIfStmt(Stmt.If stmt) {
+        if (isTruthy(evaluate(stmt.condition))) {
+            execute(stmt.thenBranch);
+        } else if (stmt.elseBranch != null) {
+            execute(stmt.elseBranch);
+        }
+
+        return null;
+    }
+
     /**
      * Evaluates the initializer (instance of {@code Expr}) of the
      * {@code Stmt.Var} object and sets the variable to the evaluated value. If
