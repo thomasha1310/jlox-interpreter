@@ -207,7 +207,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
      * no initializer is provided, sets the variable to {@code nil}.
      * 
      * @param stmt the variable statement to be evaluated
-     * @return a null instance of <code>java.lang.Void</code>
+     * @return a null instance of {@code java.lang.Void}
      */
     @Override
     public Void visitVarStmt(Stmt.Var stmt) {
@@ -217,6 +217,20 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         }
 
         environment.define(stmt.name.lexeme, value);
+        return null;
+    }
+
+    /**
+     * Executes a {@code while} loop.
+     * 
+     * @param stmt an instance of {@code Stmt.While} with a condition and body
+     * @return a null instance of {@code java.lang.Void}
+     */
+    @Override
+    public Void visitWhileStmt(Stmt.While stmt) {
+        while (isTruthy(stmt.condition)) {
+            execute(stmt.body);
+        }
         return null;
     }
 
