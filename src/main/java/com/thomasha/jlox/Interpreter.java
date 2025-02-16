@@ -18,9 +18,9 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     // <<============================ EXPRESSIONS =============================>> //
 
     /**
-     * Evaluates an Expr object by having it accept this Interpreter object. The
-     * expression then calls the corresponding visit method in this Interpreter
-     * object.
+     * Evaluates an {@code Expr} object by having it accept this {@code Interpreter}
+     * object. The expression then calls the corresponding {@code visit} method in
+     * this {@code Interpreter} object.
      * 
      * @param expr the expression to be evaluated
      * @return the resulting evaluation as a Java Object
