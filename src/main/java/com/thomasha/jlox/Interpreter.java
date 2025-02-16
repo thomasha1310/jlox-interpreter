@@ -36,6 +36,35 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     }
 
     @Override
+    public Object visitLogicalExpr(Expr.Logical expr) {
+        Object left = evaluate(expr.left);
+
+        if (expr.operator.type == TokenType.OR) {
+            // OR operator.
+
+            // Return the evaluation of the left expression if it is truthy.
+            // Essentially, returns "true" by returning a truthy value.
+            // Right side is not evaluated due to short-circuiting.
+            if (isTruthy(left))
+                return left;
+        } else {
+            // AND operator.
+
+            // Return the evaluation of the left expression if it is falsey.
+            // Essentially, returns "false" by returning a falsey value.
+            // Right side is not evaluated due to short-circuiting.
+            if (!isTruthy(left)) {
+                return left;
+            }
+        }
+
+        // The logical expression is either (false or right) or (true and right);
+        // therefore, the truthiness of the right expression is equivalent to the
+        // truthiness of the logical expression.
+        return evaluate(expr.right);
+    }
+
+    @Override
     public Object visitGroupingExpr(Expr.Grouping expr) {
         // Evaluates the inside part of the grouping, essentially removing the left and
         // right parentheses.
