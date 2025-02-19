@@ -64,15 +64,38 @@ public class Lox {
         interpreter.interpret(statements);
     }
 
+    /**
+     * Reports, but does not throw, an error by printing the error information to
+     * {@code System.err}.
+     * 
+     * @param line    the line where the error occurred
+     * @param message the error message to be reported
+     */
     static void error(int line, String message) {
         report(line, "", message);
     }
 
+    /**
+     * Prints an error message to {@code System.err} and marks {@link #hadError} as
+     * {@code true}.
+     * 
+     * @param line    the line where the error occurred
+     * @param where   the context of the error (such as the specific erroneous
+     *                syntax or symbol)
+     * @param message the error message
+     */
     private static void report(int line, String where, String message) {
         System.err.println("[line " + line + "] Error" + where + ": " + message);
         hadError = true;
     }
 
+    /**
+     * Reports, but does not throw, an error by printing the error information to
+     * {@code System.err}. Provides context using the given {@code Token}.
+     * 
+     * @param token   the {@code Token} where the error occurred
+     * @param message the error message to be reported
+     */
     static void error(Token token, String message) {
         if (token.type == TokenType.EOF) {
             report(token.line, " at end", message);

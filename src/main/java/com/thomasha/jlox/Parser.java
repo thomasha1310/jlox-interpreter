@@ -340,6 +340,14 @@ public class Parser {
         throw error(peek(), "Expect expression.");
     }
 
+    /**
+     * Reports, but does not throw, a Lox error by calling {@code Lox.error}.
+     * Returns a {@link ParseError}, which may be (but does not have to be) thrown.
+     * 
+     * @param token   the token where the error occurred
+     * @param message the error message to be reported
+     * @return a new {@code ParseError} object
+     */
     private ParseError error(Token token, String message) {
         Lox.error(token, message);
         return new ParseError();
