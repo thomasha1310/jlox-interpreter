@@ -243,7 +243,7 @@ public class Scanner {
     /**
      * Checks if the {@link #current} character matches the {@code expected}
      * character. Increments {@code current} by 1 and returns {@code true} if and
-     * only if the characters match. Otherwise, resturns {@code false} (including if
+     * only if the characters match. Otherwise, returns {@code false} (including if
      * {@link #isAtEnd()} is true) without incrementing {@code current}.
      * 
      * @param expected the character to match
