@@ -282,8 +282,16 @@ public class Parser {
 
     // <<========================== HELPER FUNCTIONS ==========================>> //
 
-    // Checks if the current token matches the specified type(s). If so, advances
-    // and returns true; otherwise, returns false.
+    /**
+     * Checks if the {@link #current} {@code Token} matches one of the specified
+     * types. Increments {@code current} by 1 and returns {@code true} if
+     * and only if the token matches a specified type. Otherwise, returns
+     * {@code false} without incrementing {@code current}.
+     * 
+     * @param types the {@code Token} types to match
+     * @return {@code false} if the token does not match, and {@code true} if the
+     *         token matches
+     */
     private boolean match(TokenType... types) {
         for (TokenType type : types) {
             if (check(type)) {
@@ -295,39 +303,74 @@ public class Parser {
         return false;
     }
 
-    // Used when the current token is expected to be a specified type. Returns the
-    // current token and advances if it matches the specified type, otherwise throws
-    // an error.
+    /**
+     * If the {@link #current} {@code Token} matches the specified
+     * {@code TokenType}, returns the {@code Token} and increments {@code current}
+     * by 1. Otherwise, throws an {@link #error}.
+     * 
+     * @param type    the {@code TokenType} to match
+     * @param message the error message in case of {@code TokenType} mismatch
+     * @return the {@code Token} that matched the specified type
+     */
     private Token consume(TokenType type, String message) {
         if (check(type))
             return advance();
         throw error(peek(), message);
     }
 
-    // Returns true if and only if the current token matches the specified type.
+    /**
+     * Returns {@code true} if and only if the {@link #current} {@code Token}
+     * matches the specified {@code TokenType}. Additionally, returns {@code false}
+     * if {@link #isAtEnd()} evaluates to {@code true}.
+     * 
+     * @param type the {@code TokenType} to match
+     * @return whether the current token matches the specified type
+     */
     private boolean check(TokenType type) {
         if (isAtEnd())
             return false;
         return peek().type == type;
     }
 
-    // Increments the 'current' index and returns the previous token.
+    /**
+     * Increments {@link #current} by 1 if and only if {@link #isAtEnd()} evaluates
+     * to {@code false}, then always returns the previous {@code Token}.
+     * 
+     * @return the previous {@code Token}, represented by {@link #previous()}
+     */
     private Token advance() {
         if (!isAtEnd())
             current++;
         return previous();
     }
 
+    /**
+     * Returns {@code true} if and only if the {@link #current} {@code Token} is an
+     * {@code EOF} type.
+     * 
+     * @return true if the current {@code Token} is the end of the file, and false
+     *         otherwise
+     */
     private boolean isAtEnd() {
         return peek().type == EOF;
     }
 
-    // Returns, but does not alter or advance past, the current token.
+    /**
+     * Returns the {@code Token} in {@link #tokens} at index {@code current}.
+     * 
+     * @return the current {@code Token}
+     * @see #tokens
+     */
     private Token peek() {
         return tokens.get(current);
     }
 
-    // Returns the previous token.
+    /**
+     * Returns the {@code Token} in {@link #tokens} at index {@code current - 1}.
+     * 
+     * @return the previous {@code Token}
+     * @see #tokens
+     */
     private Token previous() {
         return tokens.get(current - 1);
     }
