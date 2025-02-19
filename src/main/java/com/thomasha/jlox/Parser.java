@@ -59,6 +59,14 @@ public class Parser {
         if (match(LEFT_BRACE)) {
             return new Stmt.Block(block());
         }
+        if (match(BREAK)) {
+            // TODO implement break keyword
+            return null;
+        }
+        if (match(CONTINUE)) {
+            // TODO implement continue keyword
+            return null;
+        }
 
         return expressionStatement();
     }
