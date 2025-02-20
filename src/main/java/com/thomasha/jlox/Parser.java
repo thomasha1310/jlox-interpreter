@@ -195,6 +195,14 @@ public class Parser {
         return new Stmt.Expression(expr);
     }
 
+    /**
+     * Reads a block statement and converts it into a {@code List} of statements.
+     * The {@code LEFT_BRACE} token must have already been consumed, since this
+     * function begins adding declarations immediately without searching for a left
+     * brace.
+     * 
+     * @return a {@code List<Stmt>} with the content of the block
+     */
     private List<Stmt> block() {
         List<Stmt> statements = new ArrayList<>();
 
@@ -433,6 +441,7 @@ public class Parser {
      * @param type    the {@code TokenType} to match
      * @param message the error message in case of {@code TokenType} mismatch
      * @return the {@code Token} that matched the specified type
+     * @throws RuntimeError
      */
     private Token consume(TokenType type, String message) {
         if (check(type))
