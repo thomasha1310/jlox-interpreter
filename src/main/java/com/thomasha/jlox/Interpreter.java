@@ -152,10 +152,11 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
             case STAR:
                 checkNumberOperands(expr.operator, left, right);
                 return (double) left * (double) right;
+            default:
+                // Not a binary operator.
+                throw new RuntimeError(expr.operator,
+                        "The interpreter encountered a critical issue: non-binary operator evaluated as a binary operator.");
         }
-
-        // Unreachable.
-        return null;
     }
 
     @Override
