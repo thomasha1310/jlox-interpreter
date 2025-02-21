@@ -91,10 +91,6 @@ public class Parser {
         if (match(BREAK)) {
             return breakStatement();
         }
-        if (match(CONTINUE)) {
-            // TODO implement continue keyword
-            return null;
-        }
 
         return expressionStatement();
     }
