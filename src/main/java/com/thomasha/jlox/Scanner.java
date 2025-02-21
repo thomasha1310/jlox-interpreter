@@ -108,10 +108,34 @@ public class Scanner {
                 break;
 
             case '-':
-                addToken(match('=') ? MINUS_EQUAL : MINUS);
+                switch (peek()) {
+                    case '-':
+                        addToken(MINUS_MINUS);
+                        advance();
+                        break;
+                    case '=':
+                        addToken(MINUS_EQUAL);
+                        advance();
+                        break;
+                    default:
+                        addToken(MINUS);
+                        break;
+                }
                 break;
             case '+':
-                addToken(match('=') ? PLUS_EQUAL : PLUS);
+                switch (peek()) {
+                    case '+':
+                        addToken(PLUS_PLUS);
+                        advance();
+                        break;
+                    case '=':
+                        addToken(PLUS_EQUAL);
+                        advance();
+                        break;
+                    default:
+                        addToken(PLUS);
+                        break;
+                }
                 break;
             case '*':
                 addToken(match('=') ? STAR_EQUAL : STAR);
