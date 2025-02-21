@@ -139,16 +139,19 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                 checkNumberOperands(expr.operator, left, right);
                 return (double) left - (double) right;
             case PLUS:
+                if (left instanceof String || right instanceof String) {
+                    return stringify(left) + stringify(right);
+                }
                 if (left instanceof Double && right instanceof Double) {
                     return (double) left + (double) right;
-                } else if (left instanceof String && right instanceof String) {
-                    return (String) left + (String) right;
-                } else {
-                    throw new RuntimeError(expr.operator, "Operands must be two numbers or two strings.");
                 }
+                throw new RuntimeError(expr.operator, "Operands must be two numbers or include a string.");
             case SLASH:
                 checkNumberOperands(expr.operator, left, right);
-                return (double) left / (double) right;
+                if ((double) right != 0) {
+                    return (double) left / (double) right;
+                }
+                return "NaN";
             case STAR:
                 checkNumberOperands(expr.operator, left, right);
                 return (double) left * (double) right;
