@@ -13,6 +13,8 @@ public class Parser {
     private final List<Token> tokens;
     private int current = 0;
 
+    private int loopDepth = 0;
+
     Parser(List<Token> tokens) {
         this.tokens = tokens;
     }
@@ -87,8 +89,7 @@ public class Parser {
             return new Stmt.Block(block());
         }
         if (match(BREAK)) {
-            // TODO implement break keyword
-            return null;
+            return breakStatement();
         }
         if (match(CONTINUE)) {
             // TODO implement continue keyword
@@ -122,28 +123,33 @@ public class Parser {
         }
         consume(RIGHT_PAREN, "Expect ')' after for clauses.");
 
-        Stmt body = statement();
+        try {
+            loopDepth++;
+            Stmt body = statement();
 
-        // Append the increment expression to the end of the body if one is given.
-        if (increment != null) {
-            body = new Stmt.Block(
-                    Arrays.asList(body, new Stmt.Expression(increment)));
+            // Append the increment expression to the end of the body if one is given.
+            if (increment != null) {
+                body = new Stmt.Block(
+                        Arrays.asList(body, new Stmt.Expression(increment)));
+            }
+
+            // Replace condition with a constant 'true' value if one isn't given.
+            if (condition == null) {
+                condition = new Expr.Literal(true);
+            }
+
+            body = new Stmt.While(condition, body);
+
+            // Adds initializer to the beginning of the body if one is given.
+            if (initializer != null) {
+                body = new Stmt.Block(
+                        Arrays.asList(initializer, body));
+            }
+
+            return body;
+        } finally {
+            loopDepth--;
         }
-
-        // Replace condition with a constant 'true' value if one isn't given.
-        if (condition == null) {
-            condition = new Expr.Literal(true);
-        }
-
-        body = new Stmt.While(condition, body);
-
-        // Adds initializer to the beginning of the body if one is given.
-        if (initializer != null) {
-            body = new Stmt.Block(
-                    Arrays.asList(initializer, body));
-        }
-
-        return body;
     }
 
     private Stmt ifStatement() {
@@ -180,13 +186,27 @@ public class Parser {
         return new Stmt.Return(keyword, value);
     }
 
+    private Stmt breakStatement() {
+        Token keyword = previous();
+        if (loopDepth == 0) {
+            error(keyword, "Must be inside a loop to use 'break'.");
+        }
+        consume(SEMICOLON, "Expect ';' after 'break'.");
+        return new Stmt.Break(keyword);
+    }
+
     private Stmt whileStatement() {
         consume(LEFT_PAREN, "Expect '(' after 'while'.");
         Expr condition = expression();
         consume(RIGHT_PAREN, "Expect ')' after condition.");
-        Stmt body = statement();
+        try {
+            loopDepth++;
+            Stmt body = statement();
 
-        return new Stmt.While(condition, body);
+            return new Stmt.While(condition, body);
+        } finally {
+            loopDepth--;
+        }
     }
 
     private Stmt varDeclaration() {
