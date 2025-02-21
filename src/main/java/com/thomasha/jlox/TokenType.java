@@ -19,6 +19,10 @@ enum TokenType {
     SLASH_EQUAL,
     PERCENT_EQUAL,
 
+    // Increment and decrement.
+    PLUS_PLUS,
+    MINUS_MINUS,
+
     // Literals.
     IDENTIFIER, STRING, NUMBER,
 
