@@ -23,7 +23,8 @@ Baseline Lox features:
 Additional features (work-in-progress):
 
 - modulo operator (`%`)
-- ternary operator (`condition ? expression : expression`)
+- `break` statement in loops
+- compound assignment operators (e.g. `a += 5`)
 - improved standard library
 
 ## Installation
