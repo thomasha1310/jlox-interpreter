@@ -106,17 +106,22 @@ public class Scanner {
             case '.':
                 addToken(DOT);
                 break;
+
             case '-':
-                addToken(MINUS);
+                addToken(match('=') ? MINUS_EQUAL : MINUS);
                 break;
             case '+':
-                addToken(PLUS);
-                break;
-            case ';':
-                addToken(SEMICOLON);
+                addToken(match('=') ? PLUS_EQUAL : PLUS);
                 break;
             case '*':
-                addToken(STAR);
+                addToken(match('=') ? STAR_EQUAL : STAR);
+                break;
+            case '%':
+                addToken(match('=') ? PERCENT_EQUAL : PERCENT);
+                break;
+
+            case ';':
+                addToken(SEMICOLON);
                 break;
 
             case '!':
@@ -137,6 +142,8 @@ public class Scanner {
                     // Comment found; advance past all characters until end of the line.
                     while (peek() != '\n' && !isAtEnd())
                         advance();
+                } else if (match('=')) {
+                    addToken(SLASH_EQUAL);
                 } else {
                     addToken(SLASH);
                 }
