@@ -150,11 +150,21 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                 checkNumberOperands(expr.operator, left, right);
                 if ((double) right != 0) {
                     return (double) left / (double) right;
+                } else {
+                    throw new RuntimeError(expr.operator,
+                            "Cannot divide by zero.");
                 }
-                return "NaN";
             case STAR:
                 checkNumberOperands(expr.operator, left, right);
                 return (double) left * (double) right;
+            case PERCENT:
+                checkNumberOperands(expr.operator, left, right);
+                if ((double) right != 0) {
+                    return (double) left % (double) right;
+                } else {
+                    throw new RuntimeError(expr.operator,
+                            "Cannot divide by zero.");
+                }
             default:
                 // Not a binary operator.
                 throw new RuntimeError(expr.operator,
