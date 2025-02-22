@@ -36,7 +36,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         }
     }
 
-    // <<============================ EXPRESSIONS =============================>> //
+    /* <<============================ EXPRESSIONS =============================>> */
 
     /**
      * Evaluates an {@code Expr} object by having it accept this {@code Interpreter}
@@ -201,7 +201,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         return value;
     }
 
-    // <<============================= STATEMENTS =============================>> //
+    /* <<============================= STATEMENTS =============================>> */
 
     /**
      * Executes a {@code Stmt} object by having it accept this {@code Interpreter}
@@ -316,7 +316,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         return null;
     }
 
-    // <<========================== HELPER FUNCTIONS ==========================>> //
+    /* <<========================== HELPER FUNCTIONS ==========================>> */
 
     private void checkNumberOperand(Token operator, Object operand) {
         if (operand instanceof Double)
