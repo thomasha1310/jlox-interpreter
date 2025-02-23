@@ -32,7 +32,7 @@ public class Environment {
      * @return the value associated with the variable
      * @throws RuntimeError if the specified variable has not been defined
      */
-    Object get(Token name) {
+    public Object get(Token name) {
         if (values.containsKey(name.lexeme)) {
             return values.get(name.lexeme);
         }
@@ -54,7 +54,7 @@ public class Environment {
      * @param name  the name of the variable
      * @param value the value to be associated with the variable
      */
-    void define(String name, Object value) {
+    public void define(String name, Object value) {
         values.put(name, value);
     }
 
@@ -67,7 +67,7 @@ public class Environment {
      * @param value the value to assign to the specified variable
      * @throws RuntimeError if the specified variable has not been defined
      */
-    void assign(Token name, Object value) {
+    public void assign(Token name, Object value) {
         // If the variable is in the current scope, assign it and exit.
         if (values.containsKey(name.lexeme)) {
             values.put(name.lexeme, value);
