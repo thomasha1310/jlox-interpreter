@@ -47,6 +47,10 @@ public class Environment {
         throw new RuntimeError(name, "Undefined variable '" + name.lexeme + "'.");
     }
 
+    public Object getAt(int distance, String name) {
+        return ancestor(distance).values.get(name);
+    }
+
     /**
      * Sets the value of the specified variable, overriding the previous value if
      * one existed.
@@ -56,19 +60,6 @@ public class Environment {
      */
     public void define(String name, Object value) {
         values.put(name, value);
-    }
-
-    public Object getAt(int distance, String name) {
-        return ancestor(distance).values.get(name);
-    }
-
-    private Environment ancestor(int distance) {
-        Environment environment = this;
-        for (int i = 0; i < distance; i++) {
-            environment = environment.enclosing;
-        }
-
-        return environment;
     }
 
     /**
