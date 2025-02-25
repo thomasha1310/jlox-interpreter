@@ -1,5 +1,7 @@
 package com.thomasha.jlox;
 
+import java.util.List;
+
 public class LoxClass implements LoxCallable {
     final String name;
 
