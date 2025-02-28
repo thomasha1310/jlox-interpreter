@@ -1,12 +1,15 @@
 package com.thomasha.jlox;
 
 import java.util.List;
+import java.util.Map;
 
 public class LoxClass implements LoxCallable {
     final String name;
+    private final Map<String, LoxFunction> methods;
 
-    LoxClass(String name) {
+    LoxClass(String name, Map<String, LoxFunction> methods) {
         this.name = name;
+        this.methods = methods;
     }
 
     @Override
